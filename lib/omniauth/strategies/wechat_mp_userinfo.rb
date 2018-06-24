@@ -2,8 +2,8 @@ require "omniauth-oauth2"
 
 module OmniAuth
   module Strategies
-    class Wechat < OmniAuth::Strategies::OAuth2
-      option :name, "wechat"
+    class WechatMpUserinfo < OmniAuth::Strategies::OAuth2
+      option :name, "wechat_mp_userinfo"
 
       option :client_options, {
         site:          "https://api.weixin.qq.com",
@@ -49,10 +49,6 @@ module OmniAuth
           if access_token["scope"] == "snsapi_userinfo"
             response = access_token.get("/sns/userinfo", :params => {"openid" => @uid}, parse: :text)
             @raw_info = JSON.parse(response.body.gsub(/[\u0000-\u001f]+/, ''))
-          else
-            @raw_info = {"openid" => @uid }
-            @raw_info.merge!("unionid" => access_token["unionid"]) if access_token["unionid"]
-            @raw_info
           end
         end
       end
